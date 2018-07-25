@@ -1,6 +1,7 @@
 package com.example.common.kotlin_dagger2.module
 
 import com.example.common.kotlin_dagger2.network.PostApi
+import com.example.common.kotlin_dagger2.pojo.MyInjectionClass
 import com.example.common.kotlin_dagger2.utils.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -17,6 +18,12 @@ object NetworkModule {
     @Reusable
     internal fun providePostApi(retrofit: Retrofit): PostApi {
         return retrofit.create(PostApi::class.java)
+    }
+
+    @Provides
+    @Reusable
+    internal fun provideMyInjectionClass(): MyInjectionClass {
+        return MyInjectionClass()
     }
 
     /**

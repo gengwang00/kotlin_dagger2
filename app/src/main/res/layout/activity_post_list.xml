@@ -4,13 +4,28 @@
 
     <data>
         <variable
-            name="viewModel"
-            type="com.example.common.kotlin_dagger2.viewmodel.PostListViewModel" />
+        name="viewModel"
+        type="com.example.common.kotlin_dagger2.viewmodel.PostListViewModel" />
+
+        <variable
+            name="viewModel1"
+            type="com.example.common.kotlin_dagger2.viewmodel.PostHeaderViewModel" />
     </data>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/post_header"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="@{viewModel1.getHeader}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/post_list"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+            />
 
         <ProgressBar
             android:layout_width="wrap_content"
@@ -26,9 +41,10 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:adapter="@{viewModel.getPostListAdapter()}"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/post_header"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+          />
     </android.support.constraint.ConstraintLayout>
 </layout>

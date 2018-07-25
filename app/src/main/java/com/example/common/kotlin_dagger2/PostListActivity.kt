@@ -9,12 +9,16 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import com.example.common.kotlin_dagger2.databinding.ActivityPostListBinding
+import com.example.common.kotlin_dagger2.viewmodel.PostHeaderViewModel
 import com.example.common.kotlin_dagger2.viewmodel.PostListViewModel
 
 class PostListActivity :  AppCompatActivity() {
     private lateinit var binding: ActivityPostListBinding
     private lateinit var viewModel: PostListViewModel
+    private lateinit var viewModel1: PostHeaderViewModel
     private var errorSnackbar: Snackbar? = null
+
+
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
@@ -23,12 +27,16 @@ class PostListActivity :  AppCompatActivity() {
         binding.postList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         viewModel = ViewModelProviders.of(this).get(PostListViewModel::class.java)
+        viewModel1 = ViewModelProviders.of(this).get(PostHeaderViewModel::class.java)
 
         viewModel.errorMessage.observe(this, Observer {
             errorMessage -> if(errorMessage != null) showError(errorMessage) else hideError()
         })
 
         binding.viewModel = viewModel
+        binding.viewModel1 = viewModel1
+
+
     }
     private fun showError(@StringRes errorMessage:Int){
         errorSnackbar = Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_INDEFINITE)

@@ -6,6 +6,7 @@ import com.example.common.kotlin_dagger2.R
 import com.example.common.kotlin_dagger2.base.BaseViewModel
 import com.example.common.kotlin_dagger2.model.Post
 import com.example.common.kotlin_dagger2.network.PostApi
+import com.example.common.kotlin_dagger2.pojo.MyInjectionClass
 import com.example.common.kotlin_dagger2.ui.post.PostListAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -15,6 +16,9 @@ import javax.inject.Inject
 class PostListViewModel : BaseViewModel() {
     @Inject
     lateinit var postApi: PostApi
+
+    @Inject
+    lateinit var myClass: MyInjectionClass
 
     private lateinit var subscription: Disposable
 
@@ -30,6 +34,7 @@ class PostListViewModel : BaseViewModel() {
     }
 
     private fun loadPosts(){
+        println("My Class: " + myClass.getMyName())
         subscription = postApi.getPosts()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
