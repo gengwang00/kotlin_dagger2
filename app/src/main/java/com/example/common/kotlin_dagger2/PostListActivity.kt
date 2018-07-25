@@ -1,0 +1,69 @@
+package com.example.common.kotlin_dagger2
+
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
+import android.databinding.BindingAdapter
+import android.databinding.DataBindingUtil
+import android.os.Bundle
+import android.support.annotation.StringRes
+import android.support.design.widget.Snackbar
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.view.View
+import android.widget.TextView
+import com.example.common.kotlin_dagger2.databinding.ActivityPostListBinding
+import com.example.common.kotlin_dagger2.utils.BindingAdapters.getParentActivity
+import com.example.common.kotlin_dagger2.viewmodel.PostListViewModel
+
+class PostListActivity :  AppCompatActivity() {
+    private lateinit var binding: ActivityPostListBinding
+    private lateinit var viewModel: PostListViewModel
+    private var errorSnackbar: Snackbar? = null
+
+    override fun onCreate(savedInstanceState: Bundle?){
+        super.onCreate(savedInstanceState)
+
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_post_list)
+        binding.postList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+
+        viewModel = ViewModelProviders.of(this).get(PostListViewModel::class.java)
+
+        viewModel.errorMessage.observe(this, Observer {
+            errorMessage -> if(errorMessage != null) showError(errorMessage) else hideError()
+        })
+
+        binding.viewModel = viewModel
+    }
+    private fun showError(@StringRes errorMessage:Int){
+        errorSnackbar = Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_INDEFINITE)
+        errorSnackbar?.setAction(R.string.retry, viewModel.errorClickListener)
+        errorSnackbar?.show()
+    }
+
+    private fun hideError(){
+        errorSnackbar?.dismiss()
+    }
+
+    @BindingAdapter("adapter")
+    fun setAdapter(view: RecyclerView, adapter: RecyclerView.Adapter<*>) {
+        view.adapter = adapter
+    }
+
+    @BindingAdapter("mutableVisibility")
+    fun setMutableVisibility(view: View, visibility: MutableLiveData<Int>?) {
+        val parentActivity: AppCompatActivity? = view.getParentActivity()
+        if(parentActivity != null && visibility != null) {
+            visibility.observe(parentActivity, Observer { value -> view.visibility = value?: View.VISIBLE})
+        }
+    }
+
+    @BindingAdapter("mutableText")
+    fun setMutableText(view: TextView, text: MutableLiveData<String>?) {
+        val parentActivity: AppCompatActivity? = view.getParentActivity()
+        if(parentActivity != null && text != null) {
+            text.observe(parentActivity, Observer { value -> view.text = value?:""})
+        }
+    }
+}
